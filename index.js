@@ -57,6 +57,11 @@ function getFloatingNavItems(resume) {
 }
 
 function render(resume) {
+    const getFormattedDate = (date) => {
+        const format = resume.basics.customSettings.showYearOnly ? 'YYYY' : 'MMMM YYYY';
+        return utils.getFormattedDate(date, format);
+    };
+
     var addressValues;
     var addressAttrs = ['address', 'city', 'region', 'countryCode', 'postalCode'];
     var css = fs.readFileSync(__dirname + '/assets/css/theme.css', 'utf-8');
@@ -90,16 +95,16 @@ function render(resume) {
         var end_date = moment(work_info.endDate, "YYYY-MM-DD");
         var can_calculate_period = start_date.isValid() && end_date.isValid();
 
-        if (can_calculate_period) {
+        if (can_calculate_period && resume.basics.customSettings.showDuration) {
             work_info.duration = moment.preciseDiff(start_date, end_date);
         }
 
         if (start_date.isValid()) {
-          work_info.startDate = utils.getFormattedDate(start_date);
+          work_info.startDate = getFormattedDate(start_date);
         }
 
         if (end_date.isValid()) {
-          work_info.endDate = utils.getFormattedDate(end_date);
+          work_info.endDate = getFormattedDate(end_date);
         }
 
         work_info.summary = convertMarkdown(work_info.summary);
@@ -134,7 +139,7 @@ function render(resume) {
             var date = education_info[type];
 
             if (date) {
-                education_info[type] = utils.getFormattedDate(date);
+                education_info[type] = getFormattedDate(date);
             }
         });
     });
@@ -145,7 +150,7 @@ function render(resume) {
         award.summary = convertMarkdown(award.summary);
 
         if (date) {
-            award.date = utils.getFormattedDate(date, 'MMM DD, YYYY');
+            award.date = getFormattedDate(date, 'MMM DD, YYYY');
         }
     });
 
@@ -156,7 +161,7 @@ function render(resume) {
             var date = volunteer_info[type];
 
             if (date) {
-                volunteer_info[type] = utils.getFormattedDate(date);
+                volunteer_info[type] = getFormattedDate(date);
             }
         });
 
@@ -171,7 +176,7 @@ function render(resume) {
         publication_info.summary = convertMarkdown(publication_info.summary);
 
         if (date) {
-            publication_info.releaseDate = utils.getFormattedDate(date, 'MMM DD, YYYY');
+            publication_info.releaseDate = getFormattedDate(date, 'MMM DD, YYYY');
         }
     });
 
