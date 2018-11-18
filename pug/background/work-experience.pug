@@ -1,46 +1,52 @@
-unless _.isEmpty(resume.work)
-  .detail#work-experience
-    .icon
-      i.fs-lg.icon-office
-      span.mobile-title Work Experience
+unless _.isEmpty(resume.sections)
+  each section in resume.sections
+    .detail#work-experience
+      .icon
+        i.fs-lg.icon-office
+        span.mobile-title #{section.title}
 
-    .info
-      h4.title.text-uppercase Work Experience
+      .info
+        h4.title.text-uppercase #{section.title}
 
-      ul.list-unstyled.clear-margin
-        each experience in resume.work
-          li.card.card-nested.clearfix
-            .content
-              p.clear-margin.relative
-                if !experience.endDate
-                  i.icon-circle.current-event(
-                    rel="tooltip",
-                    title="Currently Working",
-                    data-placement="left"
-                  )
-                strong= experience.position
-                |,&nbsp;
-                if experience.website
-                  a(href=experience.website, target="_blank")= experience.company
-                else
-                  |#{experience.company}
+        ul.list-unstyled.clear-margin
+          each experience in section.blocks
+            li.card.card-nested.clearfix
+              .content
+                p.clear-margin.relative
+                  if experience.startDate && !experience.endDate
+                    i.icon-circle.current-event(
+                      rel="tooltip",
+                      title="Currently Working",
+                      data-placement="left"
+                    )
+                  if experience.title
+                    strong= experience.title
 
-              p.text-muted
-                small
-                  span.space-right
-                    |#{experience.startDate} - #{experience.endDate || 'Present'}
+                  if experience.position && experience.company
+                    strong= experience.position
+                    |,&nbsp;
+                    if experience.website
+                      a(href=experience.website, target="_blank")= experience.company
+                    else
+                      |#{experience.company}
 
-                  if experience.duration
-                    span
-                      i.icon-clock.mr-5
-                      |#{experience.duration}
+                if experience.startDate
+                  p.text-muted
+                    small
+                      span.space-right
+                        |#{experience.startDate} - #{experience.endDate || 'Present'}
 
-              .mop-wrapper.space-bottom!= experience.summary
+                      if experience.duration
+                        span
+                          i.icon-clock.mr-5
+                          |#{experience.duration}
 
-              unless _.isEmpty(experience.highlights)
-                ul
-                  each highlight in experience.highlights
-                    if highlight.div
-                      div.mop-wrapper!= highlight.div
-                    if highlight.li
-                      li.mop-wrapper!= highlight.li
+                .mop-wrapper.space-bottom!= experience.summary
+
+                unless _.isEmpty(experience.highlights)
+                  ul
+                    each highlight in experience.highlights
+                      if highlight.div
+                        div.mop-wrapper!= highlight.div
+                      if highlight.li
+                        li.mop-wrapper!= highlight.li
